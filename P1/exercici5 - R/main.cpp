@@ -24,15 +24,35 @@ using namespace std;
 /*
  * 
  */
+void newCircle(int dato1){
+    try{
+        Circle* circle = new Circle(dato1);
+        }
+    catch(int e){
+        cout << "No se aceptan radios negativos." << endl;
+    }
+    
+}
+
+void newEllipse(int dato1, int dato2){
+    try{
+        Ellipse* elipse = new Ellipse(dato1, dato2);
+        }
+    catch(int e){
+        cout << "No se aceptan radios negativos." << endl;
+    }
+}
+
 int main() {
     int numCircles = 0, numEllipses = 0;
     char tipo;
     float dato1, dato2;
+    string nombre;
     vector <string> options;
     options.push_back("1. Salir");
     options.push_back("2. Añadir figura");
     options.push_back("3. Glosario de figuras");
-    options.push_back("4. Procesar archivo: figuras.txt");
+    options.push_back("4. Procesar archivo");
     int option;
     cout << "*** Inicio ***" << endl << endl;
     do
@@ -49,25 +69,13 @@ int main() {
                 cin >> tipo >> dato1 >> dato2;
                 switch(tipo){
                     case 'C':{
-                        CIRCULO:
-                        try{
-                        Circle* circle = new Circle(dato1);
+                        newCircle(dato1);
                         numCircles++;
-                        }
-                        catch(int e){
-                            cout << "No se aceptan radios negativos." << endl;
-                        }
                         break;
                     }
                     case 'E':{
-                        ELIPSE:
-                        try{
-                            Ellipse* elipse = new Ellipse(dato1, dato2);
-                            numEllipses++;
-                        }
-                        catch(int e){
-                            cout << "No se aceptan radios negativos." << endl;
-                        }
+                        newEllipse(dato1, dato2);
+                        numEllipses++;
                         break;
                     }
                     default:{
@@ -80,22 +88,25 @@ int main() {
                 cout << "Tienes " << numCircles << " círculos y " << numEllipses << " elipses." << endl;
                 break;
             case 4:
-                ifstream fichero("figuras.txt");
+                cout << "Introduce nombre del fichero:" << endl;
+                cin >> nombre;
+
+                ifstream fichero(nombre);
                 while(!fichero.eof()){
                     fichero >> tipo;
                     fichero >> dato1;
-                    fichero >> dato2;
-                    /*Al utilizar goto consigo ahorrar código además de hacer que
-                     las figuras que lee en el fichero las tenga en cuenta en
-                     el glosario de figuras.*/
                     if(tipo == 'C'){
-                        goto CIRCULO;
+                        newCircle(dato1);
+                        numCircles++;
                     }
                     else{
-                        goto ELIPSE;
+                        fichero >> dato2;
+                        newEllipse(dato1, dato2);
+                        numEllipses++;
                     }
                 }
                 fichero.close();
+                cout << "Fin de fichero." << endl << endl;
                 break;
         }
     }   
