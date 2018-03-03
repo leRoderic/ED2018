@@ -44,4 +44,17 @@ int main() {
     cout << "¡Hasta luego!" << endl;
     return 0;
 }
+/*
+ * 
+ Un cop creat aquest programa executa'l. Prova de posar un punt de control i
+ fes el debug. Quins tipus de fitxers tens a la carpeta del teu ordinador del
+ projecte? A què correspon cada tipus?
+ 
+    arxiuv main.cpp     |   codi font del programa
+    carpeta build       |   conté arxius objecte
+    carpeta dist        |   conté l'executable
+    carpeta nbproject   |   conté matadades del projecte NetBeans
+    arxiu Makefile      |   instruccions per al compilador per a construir l'aplicació
+ 
+ */
 
