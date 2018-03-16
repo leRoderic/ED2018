@@ -112,7 +112,7 @@ int main() {
                 break;
             }
             case 2:{
-                //insFront(arr);
+                insFront(arr);
                 break;
             }
             case 3:

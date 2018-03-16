@@ -19,7 +19,8 @@ using namespace std;
 
 ArrayDeque::ArrayDeque(int maxSize) {
     size = maxSize;
-    vector <int> data = vector <int> (maxSize);
+    vector <int> data1 = vector <int> (maxSize);
+    this->data = data1;
     cout << "Estructura creada." << endl;
 }
 
