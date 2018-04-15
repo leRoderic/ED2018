@@ -1,0 +1,11 @@
+maria	1	practica.pdf
+gestor	1	memoria.pdf
+assistent	2	gestio.doc
+adan	1	dibuix.png
+silvia	2	dades.txt
+pere	1	horaris.xls
+pablo	1	codi.cpp
+anna	2	practica2.cpp
+jose	1	jose.ppt
+pablo	2	student.doc
+
