@@ -1,3 +1,10 @@
+/* 
+ * File:   NodeTree.h
+ * Author: sbarripi7.alumnes
+ *
+ * Created on 17 / d’abril / 2018, 08:18
+ */
+
 
 #ifndef NODETREE_H
 #define NODETREE_H
@@ -7,12 +14,11 @@ using namespace std;
 template <class Type>
 class NodeTree {
     public:
-        /*Constructores*/
-        NodeTree(const Type& value);
+        NodeTree(const Type& value, const int key);
         NodeTree(const NodeTree& orig);
-        /*Destructores*/
-        virtual ~NodeTree();
-        /*Consultores*/
+        virtual ~NodeTree(); // destructor
+
+        /*Consultors*/
         NodeTree<Type>* getRight() const;
         NodeTree<Type>* getLeft() const;
         NodeTree<Type>* getParent() const;
@@ -21,149 +27,172 @@ class NodeTree {
         bool isRoot() const;
         bool isExternal() const;
         const Type& getValue() const;
+        const int getKey() const;
         int getHeight() const;
-        int getBalance() const;        
-        /*Modificadores*/
+        int getBalance() const;
+        
+        /*Modificadors*/
         void setHeight(int h);
         void setBalance(int b);
         void setValue(const Type& newValue);
+        void setKey(int newKey);
         void setRight(NodeTree<Type>* newRight);
         void setLeft(NodeTree<Type>* newLeft);
         void setParent(NodeTree<Type>* newParent);
+        
         private:
         NodeTree<Type>* pParent;
         NodeTree<Type>* pLeft;
         NodeTree<Type>* pRight;
         Type value;
+        int key;
         int height;
         int balance;
 };
 
-//================ CONSTRUCTORES ===============================================
+
+/********************************
+    Constructores y destructores 
+*********************************/
+
+// Constructor con parametros
 template <class Type>
-NodeTree<Type>::NodeTree(const Type& value) :
-    //Constructor
+NodeTree<Type>::NodeTree(const Type& value, const int key) :
     pParent(nullptr),
     pLeft(nullptr),
     pRight(nullptr),
     value(value),
+    key(key),
     height(1),
     balance(0)
 {      
 }
 
+// Constructor copia
 template <class Type>
 NodeTree<Type>::NodeTree(const NodeTree& orig):
-    // Constructor copia
     pParent(nullptr),
     pLeft(nullptr),
     pRight(nullptr),
+    key(orig.key),
     value(orig.value),
     height(orig.height),
     balance(orig.balance)
 {          
 }
 
-//================ DESTRUCTOR ==================================================
+
+// Destructor
 template <class Type>
 NodeTree<Type>::~NodeTree(){    
 }
 
-//================ CONSULTORES =================================================
+/***************************
+        Consultores
+****************************/
+
+// Retorna el hijo derecho
 template <class Type>
 NodeTree<Type>* NodeTree<Type>::getRight() const{
-    //Getter para hijo derecho
     return this->pRight;    
 }
 
+// Retorna el hijo izquierdo
 template <class Type>
 NodeTree<Type>* NodeTree<Type>::getLeft() const{
-    //Getter para hijo izquierdo
     return this->pLeft;
 }
 
+// Retorna el padre
 template <class Type>
 NodeTree<Type>* NodeTree<Type>::getParent() const{
-    //Getter para padre
     return this->pParent;
 }
 
+// True si tiene hijo derecho, false si no
 template <class Type>
 bool NodeTree<Type>::hasRight() const{    
-    //Comprueba si existe hijo derecho
     return !(pRight == nullptr);
 }
 
+// True si tiene hijo izquierdo, false si no
 template <class Type>
 bool NodeTree<Type>::hasLeft() const{
-    //Comprueba si existe hijo izquierdo
     return !(pLeft == nullptr);
 }
 
+// True si es root, false si no
 template <class Type>
 bool NodeTree<Type>::isRoot() const{
-    //Comprueba si el nodo es raíz
     return pParent == nullptr;
 }
 
+// True si es un nodo externo, false si es interno
 template <class Type>
 bool NodeTree<Type>::isExternal() const{
-    //Comprueba si el nodo es externo
     return !hasRight() && !hasLeft();
 }
 
+
+// Retorna el valor contenido en el nodo
 template <class Type>
 const Type& NodeTree<Type>::getValue() const{
-    //Getter para valor
     return this->value;
 }
 
+// Retorna la clave del nodo
+template <class Type>
+const int NodeTree<Type>::getKey() const{
+    return this->key;
+}
+
+// Retorna la altura del nodo
 template <class Type>
 int NodeTree<Type>::getHeight() const{
-    //Getter para altura del nodo
     return this->height;
 }
 
+// Retorna el factor de balance del nodo
 template <class Type>
 int NodeTree<Type>::getBalance() const{
-    //Getter para balance
     return this->balance;
 }
 
-//================ MODIFICADORES ===============================================
+
+/********************
+    Modificadores
+********************/
 template <class Type>
 void NodeTree<Type>::setHeight(int h){
-    //Setter para altura
     this->height = h;
 }
 
 template <class Type>
 void NodeTree<Type>::setBalance(int b){
-    //Setter para balance
     this->balance = b;
 }
     
+// Modifica el valor del nodo
 template <class Type>
 void NodeTree<Type>::setValue(const Type& value){
-    //Setter para valor del nodo
     this->value = value;
 }
 
+// Cambia de nodo que tiene como hijo derecho
 template <class Type>
 void NodeTree<Type>::setRight(NodeTree<Type>* newRight){
-    //Setter para hijo derecho
     pRight = newRight;
 }
 
+// Cambia de nodo que tiene como hijo izquierdo
 template <class Type>
 void NodeTree<Type>::setLeft(NodeTree<Type>* newLeft){
-    //Setter para hijo izquierdo
     pLeft = newLeft;
 }
 
+// Cambia de nodo que tiene como padre
 template <class Type>
 void NodeTree<Type>::setParent(NodeTree<Type>* newParent){
-    //Setter para padre
     pParent = newParent;
 }
 

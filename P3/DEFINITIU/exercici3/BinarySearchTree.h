@@ -9,19 +9,19 @@
 #include <iostream>
 #include "NodeTree.h"
 
-#ifndef BALANCEDBST_H
-#define BALANCEDBST_H
+#ifndef BINARYSEARCHTREE_H
+#define BINARYSEARCHTREE_H
 
 
 using namespace std;
 
 template <class Type>
-class BalancedBST{
+class BinarySearchTree{
     public:
         /*Constructors i Destructors*/
-        BalancedBST();
-        BalancedBST(const BalancedBST& orig);
-        virtual ~BalancedBST();
+        BinarySearchTree();
+        BinarySearchTree(const BinarySearchTree& orig);
+        virtual ~BinarySearchTree();
         
         /*Consultors*/
         int size() const;
@@ -35,8 +35,7 @@ class BalancedBST{
         
         /*Modificadors*/
         void insert(const Type& value, const int key);
-        void mirror();
-        
+        void mirror();  
         
     private:
         void postDelete(NodeTree<Type>* p);
@@ -47,14 +46,8 @@ class BalancedBST{
         void printPostorder(NodeTree<Type>* p) const;
         void printInorder(NodeTree<Type>* p) const;
         int getHeight(NodeTree<Type>* p);
-        int getBalance(NodeTree<Type>* p);
         void mirror(NodeTree<Type>* p);
         void rotEsqExt(NodeTree<Type>* p);
-        
-        void rotateExternLeft(NodeTree<Type>* p);
-        void rotateExternRight(NodeTree<Type>* p);
-        void rotateInternLeft(NodeTree<Type>* p);
-        void rotateInternRight(NodeTree<Type>* p);
         
         
         /*Atributs*/
@@ -63,14 +56,14 @@ class BalancedBST{
 
 // Constructor por defecto
 template <class Type>
-BalancedBST<Type>::BalancedBST(){
+BinarySearchTree<Type>::BinarySearchTree(){
     pRoot = nullptr;
 }
 
 
 // Constructor copia
 template <class Type>
-BalancedBST<Type>::BalancedBST(const BalancedBST& orig){   
+BinarySearchTree<Type>::BinarySearchTree(const BinarySearchTree& orig){   
     if(orig.isEmpty())
         pRoot = nullptr;
     else{
@@ -81,9 +74,8 @@ BalancedBST<Type>::BalancedBST(const BalancedBST& orig){
 
 // Destructor del arbol
 template <class Type>
-BalancedBST<Type>::~BalancedBST(){           
-    if(!isEmpty())
-        postDelete(pRoot);
+BinarySearchTree<Type>::~BinarySearchTree(){
+    postDelete(pRoot);
 }
 
 
@@ -91,7 +83,7 @@ BalancedBST<Type>::~BalancedBST(){
 
 // Retorna la cantidad de elementos en el arbol
 template <class Type>
-int BalancedBST<Type>::size() const{
+int BinarySearchTree<Type>::size() const{
     if(isEmpty())
         return 0;
     return size(pRoot);    
@@ -99,19 +91,19 @@ int BalancedBST<Type>::size() const{
 
 // Retorna  true si el arbol esta vacio, de lo contrario false
 template <class Type>
-bool BalancedBST<Type>::isEmpty() const{
+bool BinarySearchTree<Type>::isEmpty() const{
     return pRoot == nullptr;
 }
 
 // Retorna el nodo raíz
 template <class Type>
-NodeTree<Type>* BalancedBST<Type>::root(){
+NodeTree<Type>* BinarySearchTree<Type>::root(){
     return this->pRoot;
 }
 
 // Retorna true si hay un nodo con la clave pasada por parametro; de lo contrario false
 template <class Type>
-bool BalancedBST<Type>::search(const int key){    
+bool BinarySearchTree<Type>::search(const int key){    
     if(isEmpty())
         return false;    
     
@@ -139,25 +131,25 @@ bool BalancedBST<Type>::search(const int key){
 
 // Imprime el contenido en inorden
 template<class Type>
-void BalancedBST<Type>::printInorder() const{
+void BinarySearchTree<Type>::printInorder() const{
     printInorder(pRoot);
 }
 
 // Imprime el contenido en preorden
 template<class Type>
-void BalancedBST<Type>::printPreorder() const{
+void BinarySearchTree<Type>::printPreorder() const{
     printPreorder(pRoot);    
 }
 
 // Imprime el contenido en postorden
 template<class Type>
-void BalancedBST<Type>::printPostorder() const{
+void BinarySearchTree<Type>::printPostorder() const{
     printPostorder(pRoot);
 }
 
 // Retorna la altura del arbol, que equivale a la altura de la raiz
 template<class Type>
-int BalancedBST<Type>::getHeight(){
+int BinarySearchTree<Type>::getHeight(){
     if(isEmpty())
         return 0;
     else return pRoot->getHeight();
@@ -166,7 +158,7 @@ int BalancedBST<Type>::getHeight(){
 // SETTER
 
 template<class Type>
-void BalancedBST<Type>::insert(NodeTree<Type>* p, const Type& value, const int key){
+void BinarySearchTree<Type>::insert(NodeTree<Type>* p, const Type& value, const int key){
     
     if(p->getKey() < key){ // Si la nueva peli tiene clave mas grande
         if(p->hasRight())
@@ -191,30 +183,17 @@ void BalancedBST<Type>::insert(NodeTree<Type>* p, const Type& value, const int k
     p->setHeight(getHeight(p));
     
     // Actualizar el factor de balance en los nodos
-    int balance = getBalance(p);
+    int balance = 0;
+    if(p->hasRight())
+        balance += p->getRight()->getHeight();
+    if(p->hasLeft())
+        balance -= p->getLeft()->getHeight();
+    
     p->setBalance(balance);
-    
-    // Comprobar el factor y reestructurar
-    int signe;
-    
-    switch(balance){
-        case -2:
-            signe = balance * p->getLeft()->getBalance();
-            if(signe > 0)
-                rotateExternRight(p);
-            else rotateInternRight(p);
-            break;
-        case 2:
-            signe = balance * p->getRight()->getBalance();
-            if(signe > 0)
-                rotateExternLeft(p);
-            else rotateInternLeft(p);
-            break;            
-    }        
 }
 
 template<class Type>
-void BalancedBST<Type>::insert(const Type& value, const int key){
+void BinarySearchTree<Type>::insert(const Type& value, const int key){
     if(search(key))
         throw invalid_argument("Ya hay ese elemento");
     
@@ -226,88 +205,8 @@ void BalancedBST<Type>::insert(const Type& value, const int key){
 
 // Invierte los hijos derechos e izquierdos
 template<class Type>
-void BalancedBST<Type>::mirror(){
+void BinarySearchTree<Type>::mirror(){
     mirror(pRoot);
-}
-
-template<class Type>
-void BalancedBST<Type>::rotateExternLeft(NodeTree<Type>* node){
-    NodeTree<Type>* tmp = node->getRight();
-    node->setRight(tmp->getLeft());
-    if(tmp->hasLeft()){
-        tmp->getLeft()->setParent(node);
-    }
-    tmp->setLeft(node);
-    if(node == pRoot){
-        node->setParent(tmp);
-        tmp->setParent(nullptr);
-        this->pRoot = tmp;
-    }
-    else{
-        if(node->getKey() < node->getParent()->getKey()){ // Si node era hijo izquierdo
-            node->getParent()->setLeft(tmp);
-        }
-        else{ // Si node era hijo derecho
-            node->getParent()->setRight(tmp);
-        }
-        
-        tmp->setParent(node->getParent());
-        node->setParent(tmp);
-    }
-
-   // Actualizar alturas
-    node->setHeight(getHeight(node));
-    tmp->setHeight(getHeight(tmp));
-    
-    // Actualizar balances
-    node->setBalance(getBalance(node));
-    tmp->setBalance(getBalance(tmp));
-}
-
-template<class Type>
-void BalancedBST<Type>::rotateExternRight(NodeTree<Type>* node){
-    NodeTree<Type>* tmp = node->getLeft();
-    node->setLeft(tmp->getRight());
-        
-    if(tmp->hasRight())
-        tmp->getRight()->setParent(node);
-    
-    tmp->setRight(node);        
-    if(node == pRoot){        
-        node->setParent(tmp);
-        tmp->setParent(nullptr);
-        this->pRoot = tmp;
-    }    
-    else {
-        if(node->getKey() < node->getParent()->getKey()) // Si node era hijo izquierdo
-            node->getParent()->setLeft(tmp);
-        else // Si node era hijo derecho
-            node->getParent()->setRight(tmp);
-        tmp->setParent(node->getParent());
-        node->setParent(tmp);        
-    }
-    
-    // Actualizar alturas
-    node->setHeight(getHeight(node));
-    tmp->setHeight(getHeight(tmp));
-    
-    // Actualizar balances
-    node->setBalance(getBalance(node));
-    tmp->setBalance(getBalance(tmp));
-}
-
-template<class Type>
-void BalancedBST<Type>::rotateInternLeft(NodeTree<Type>* node){
-    NodeTree<Type>* tmp = node->getRight();
-    rotateExternRight(tmp);
-    rotateExternLeft(node);
-}
-
-template<class Type>
-void BalancedBST<Type>::rotateInternRight(NodeTree<Type>* node){
-    NodeTree<Type>* tmp = node->getLeft();
-    rotateExternLeft(tmp);
-    rotateExternRight(node);
 }
 
 
@@ -315,7 +214,7 @@ void BalancedBST<Type>::rotateInternRight(NodeTree<Type>* node){
 
 // Metodo recursivo para constructor copia
 template <class Type>
-void BalancedBST<Type>::preCopy(NodeTree<Type>* p, NodeTree<Type>* orig){    
+void BinarySearchTree<Type>::preCopy(NodeTree<Type>* p, NodeTree<Type>* orig){    
     if(orig->hasLeft()){        
         NodeTree<Type>* left = new NodeTree<Type>(orig->getLeft());
         left->setParent(p);
@@ -333,7 +232,7 @@ void BalancedBST<Type>::preCopy(NodeTree<Type>* p, NodeTree<Type>* orig){
 
 // Metodo recursivo para destructor
 template<class Type>
-void BalancedBST<Type>::postDelete(NodeTree<Type>* p){
+void BinarySearchTree<Type>::postDelete(NodeTree<Type>* p){
     // Si tiene hijo izquierdo
     if(p->hasLeft())
         postDelete(p->getLeft());
@@ -346,7 +245,7 @@ void BalancedBST<Type>::postDelete(NodeTree<Type>* p){
 
 // Metodo recursivo para obtener el numero de elementos del arbol
 template<class Type>
-int BalancedBST<Type>::size(NodeTree<Type>* p) const{   
+int BinarySearchTree<Type>::size(NodeTree<Type>* p) const{   
     int size = 1;
     if(p->hasLeft())
         size += size(p->getLeft());
@@ -358,16 +257,16 @@ int BalancedBST<Type>::size(NodeTree<Type>* p) const{
 // Metodo recursivo que recorre el arbol en preorden, imprimiendo
 // el elemento
 template<class Type>
-void BalancedBST<Type>::printPreorder(NodeTree<Type>* p) const{   
+void BinarySearchTree<Type>::printPreorder(NodeTree<Type>* p) const{   
     cout << p->getValue();
 
     if(p->hasLeft()){
-        cout << ", ";
+        cout << endl;
         printPreorder(p->getLeft());
     }
     
     if(p->hasRight()){
-        cout << ", ";
+        cout << endl;
         printPreorder(p->getRight());
     }
 }
@@ -375,28 +274,28 @@ void BalancedBST<Type>::printPreorder(NodeTree<Type>* p) const{
 // Metodo recursivo que recorre el arbol en postorden, imprimiendo el 
 // elemento
 template<class Type>
-void BalancedBST<Type>::printPostorder(NodeTree<Type>* p) const{    
+void BinarySearchTree<Type>::printPostorder(NodeTree<Type>* p) const{    
     if(p->hasLeft()){
         printPostorder(p->getLeft());
-        cout << ", ";
+        cout << endl;
     }
     
     if(p->hasRight()){        
         printPostorder(p->getRight());
-        cout << ", ";
+        cout << endl;
     }
     cout << p->getValue();    
 }
 
 // Metodo recursivo que recorre el arbol en inorden, imprimiendo el elemento
 template<class Type>
-void BalancedBST<Type>::printInorder(NodeTree<Type>* p) const{    
+void BinarySearchTree<Type>::printInorder(NodeTree<Type>* p) const{    
     if(p->hasLeft()){
         printInorder(p->getLeft());
     }
         
     cout << p->getValue();
-    cout << ", ";
+    cout << endl;    
         
     if(p->hasRight()){        
         printInorder(p->getRight());
@@ -405,7 +304,7 @@ void BalancedBST<Type>::printInorder(NodeTree<Type>* p) const{
 
 // Metodo recursivo que invierte hijos izq. y derecho
 template<class Type>
-void BalancedBST<Type>::mirror(NodeTree<Type>* p){
+void BinarySearchTree<Type>::mirror(NodeTree<Type>* p){
     NodeTree<Type>* aux = p->getLeft();
     p->setLeft(p->getRight());
     p->setRight(aux);
@@ -418,7 +317,7 @@ void BalancedBST<Type>::mirror(NodeTree<Type>* p){
 
 // Metodo que calcula la altura de un nodo, y la retorna.
 template<class Type>
-int BalancedBST<Type>::getHeight(NodeTree<Type>* p){
+int BinarySearchTree<Type>::getHeight(NodeTree<Type>* p){
     int lHeight = 0, rHeight = 0;
     
     if(p->hasLeft())
@@ -433,15 +332,4 @@ int BalancedBST<Type>::getHeight(NodeTree<Type>* p){
     return maxHeight + 1;        
 }
 
-template<class Type>
-int BalancedBST<Type>::getBalance(NodeTree<Type>* p){
-    int balance = 0;
-    if(p->hasRight())
-        balance += p->getRight()->getHeight();
-    if(p->hasLeft())
-        balance -= p->getLeft()->getHeight();    
-    return balance;
-}
-
-
-#endif /* BALANCEDBST */
+#endif /* BINARYSEARCHTREE_H */
